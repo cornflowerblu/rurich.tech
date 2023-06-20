@@ -3,7 +3,7 @@ services:
   postgres:
     image: postgres:latest
     restart: always
-    environment:
+    environment:                            
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=postgres
@@ -11,3 +11,14 @@ services:
       - "5432:5432"
     volumes:
       - ./postgres-data:/var/lib/postgresql/data
+  graphql-engine:
+      image: hasura/graphql-engine:v1.0.0-beta.6
+      ports:          
+      - "8080:8080"
+      depends_on:
+      - "postgres"
+      restart: always
+      environment:
+        HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:postgres@postgres:5432/postgres
+        HASURA_GRAPHQL_ENABLE_CONSOLE: "true" # set to "false" to disable console
+        HASURA_GRAPHQL_ADMIN_SECRET: myadminsecretkey
